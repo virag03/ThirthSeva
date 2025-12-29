@@ -44,9 +44,9 @@ const DashboardNavbar = () => {
     // Admin role links
     const adminLinks = [
         { to: '/admin/dashboard', label: 'Dashboard', icon: 'bi-shield-lock' },
-        { to: '/admin/bhaktnivas', label: 'Bhaktnivas', icon: 'bi-house' },
-        { to: '/admin/bookings', label: 'All Bookings', icon: 'bi-calendar-check' },
-        { to: '/admin/users', label: 'Users', icon: 'bi-people' },
+        // { to: '/admin/bhaktnivas', label: 'Bhaktnivas', icon: 'bi-house' },
+        // { to: '/admin/bookings', label: 'All Bookings', icon: 'bi-calendar-check' },
+        //{ to: '/admin/users', label: 'Users', icon: 'bi-people' },
     ];
 
     // Get links based on user role

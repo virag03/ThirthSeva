@@ -51,8 +51,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(builder.Configuration["AppSettings:FrontendUrl"] ?? "http://localhost:5173")
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyMethod();
+              //.AllowCredentials();
     });
 });
 
@@ -66,13 +66,14 @@ builder.Services.AddScoped<DarshanService>();
 builder.Services.AddScoped<FoodServiceService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<UserService>();
 
 // Add HttpClient for external API calls
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-// Seed Database
+// Initialize database - CHANGED THIS SECTION
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -80,13 +81,11 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
         
-        // Ensure database is created with latest schema
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-        // Apply migrations
+        // Only use Migrate() - Remove EnsureDeleted() and EnsureCreated()
+        // Migrate will apply any pending migrations and create database if it doesn't exist
         context.Database.Migrate();
         
-        // Seed data
+        // Now seed the data
         DbSeeder.SeedData(context);
         
         Console.WriteLine("Database initialized and seeded successfully!");
@@ -94,8 +93,10 @@ using (var scope = app.Services.CreateScope())
     catch (Exception ex)
     {
         Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
     }
 }
+
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -110,6 +111,10 @@ app.UseHttpsRedirection();
 var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 var templesPath = Path.Combine(uploadsPath, "temples");
 var bhaktnivasPath = Path.Combine(uploadsPath, "bhaktnivas");
+app.UseCors("AllowFrontend");
+
+// Enable static file serving for uploaded images
+app.UseStaticFiles();
 
 if (!Directory.Exists(templesPath))
 {
@@ -120,13 +125,41 @@ if (!Directory.Exists(bhaktnivasPath))
     Directory.CreateDirectory(bhaktnivasPath);
 }
 
-app.UseCors("AllowFrontend");
+
 
 // Enable static file serving for uploaded images
 app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    
+    // Check if admin exists
+    var admin = context.Users.FirstOrDefault(u => u.Email == "admin@tirthseva.com" && u.Role == "Admin");
+    if (admin == null)
+    {
+        var adminUser = new TirthSeva.API.Models.User
+        {
+            Name = "Admin User",
+            Email = "admin@tirthseva.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+            Role = "Admin",
+            IsEmailVerified = true,
+            CreatedAt = DateTime.UtcNow
+        };
+        
+        context.Users.Add(adminUser);
+        context.SaveChanges();
+        Console.WriteLine("MANUAL: Admin user created!");
+    }
+    else
+    {
+        Console.WriteLine($"MANUAL: Admin exists. Total users: {context.Users.Count()}");
+    }
+}
 
 app.MapControllers();
 

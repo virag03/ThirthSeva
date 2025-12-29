@@ -179,6 +179,10 @@ namespace TirthSeva.API.Services
                 return false; // Not authorized
             }
 
+            // Delete associated bookings first to avoid foreign key constraint violations
+            var bookings = await _context.Bookings.Where(b => b.BhaktnivasId == id).ToListAsync();
+            _context.Bookings.RemoveRange(bookings);
+
             _context.Bhaktnivas.Remove(bhaktnivas);
             await _context.SaveChangesAsync();
             return true;

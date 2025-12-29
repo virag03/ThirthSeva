@@ -7,23 +7,40 @@ namespace TirthSeva.API.Data
     {
         public static void SeedData(ApplicationDbContext context)
         {
-            // Check if data already exists
+            // Always ensure admin exists FIRST
+            var adminEmail = "admin@tirthseva.com";
+            var existingAdmin = context.Users
+                .FirstOrDefault(u => u.Email == adminEmail && u.Role == "Admin");
+            
+            if (existingAdmin == null)
+            {
+                var adminUser = new User
+                {
+                    Name = "Admin User",
+                    Email = adminEmail,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+                    Role = "Admin",
+                    IsEmailVerified = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+                
+                context.Users.Add(adminUser);
+                context.SaveChanges();
+                
+                Console.WriteLine("Admin user created: admin@tirthseva.com / Admin@123");
+            }
+            else
+            {
+                Console.WriteLine("Admin user already exists");
+            }
+            
+            // Check if other data already exists - if it does, skip the rest of seeding
             if (context.Temples.Any())
             {
-                return; // Database has been seeded
+                return; // Database has been seeded with sample data
             }
 
-            // Seed Users
-            var adminUser = new User
-            {
-                Name = "Admin User",
-                Email = "admin@tirthseva.com",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
-                Role = "Admin",
-                IsEmailVerified = true,
-                CreatedAt = DateTime.UtcNow
-            };
-
+            // Seed the rest of the users (regular user and providers)
             var regularUser = new User
             {
                 Name = "Ramesh Kumar",
@@ -54,7 +71,7 @@ namespace TirthSeva.API.Data
                 CreatedAt = DateTime.UtcNow
             };
 
-            context.Users.AddRange(adminUser, regularUser, provider1, provider2);
+            context.Users.AddRange(regularUser, provider1, provider2);
             context.SaveChanges();
 
             // Seed 10 Famous Indian Temples - assigned to providers
@@ -332,6 +349,8 @@ namespace TirthSeva.API.Data
 
             context.FoodServices.AddRange(foodServices);
             context.SaveChanges();
+            
+            Console.WriteLine("Sample data seeded successfully!");
         }
     }
 }

@@ -98,7 +98,12 @@ namespace TirthSeva.API.Controllers
             }
 
             var userId = int.Parse(userIdClaim.Value);
-            var result = await _bookingService.CancelBookingAsync(id, userId);
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Admin can cancel any booking, User can only cancel their own
+            int? bookingUserId = userRole == "Admin" ? null : userId;
+
+            var result = await _bookingService.CancelBookingAsync(id, bookingUserId);
             
             if (!result)
             {
@@ -108,18 +113,24 @@ namespace TirthSeva.API.Controllers
             return Ok(new { message = "Booking cancelled successfully" });
         }
 
-        [Authorize(Roles = "ServiceProvider")]
+        [Authorize(Roles = "ServiceProvider,Admin")]
         [HttpPut("{id}/status")]
         public async Task<ActionResult> UpdateBookingStatus(int id, [FromBody] UpdateBookingStatusRequest request)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
             if (userIdClaim == null)
             {
                 return Unauthorized();
             }
 
             var userId = int.Parse(userIdClaim.Value);
-            var result = await _bookingService.UpdateBookingStatusAsync(id, request.BookingStatus, userId);
+            
+            // Admin can update any booking status, Provider can only update their own
+            int? providerId = userRole == "Admin" ? null : userId;
+
+            var result = await _bookingService.UpdateBookingStatusAsync(id, request.BookingStatus, providerId);
             
             if (!result)
             {
