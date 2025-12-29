@@ -24,8 +24,13 @@ export const authService = {
         localStorage.removeItem('user');
     },
 
-    verifyEmail: async (token) => {
-        const response = await api.post('/auth/verify-email', { token });
+    verifyOTP: async (email, otp) => {
+        const response = await api.post('/auth/verify-otp', { email, otp });
+        return response.data;
+    },
+
+    resendOTP: async (email) => {
+        const response = await api.post('/auth/resend-otp', { email });
         return response.data;
     },
 

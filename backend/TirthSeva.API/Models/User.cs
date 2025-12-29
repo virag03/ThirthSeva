@@ -28,6 +28,10 @@ namespace TirthSeva.API.Models
 
         public string? EmailVerificationToken { get; set; }
 
+        public string? EmailOTP { get; set; }
+
+        public DateTime? OTPExpiry { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties

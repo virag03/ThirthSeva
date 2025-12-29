@@ -46,6 +46,24 @@ namespace TirthSeva.API.DTOs
         public string Token { get; set; } = string.Empty;
     }
 
+    public class VerifyOTPRequest
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(6, MinimumLength = 6)]
+        public string OTP { get; set; } = string.Empty;
+    }
+
+    public class ResendOTPRequest
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+    }
+
     public class UserProfileResponse
     {
         public int Id { get; set; }

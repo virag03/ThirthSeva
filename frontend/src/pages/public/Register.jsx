@@ -46,8 +46,13 @@ const Register = () => {
         const result = await register(formData.name, formData.email, formData.password, formData.role);
 
         if (result.success) {
-            // Redirect to login page instead of auto-logging in
-            navigate('/login');
+            // Redirect to OTP verification page
+            navigate('/verify-otp', { 
+                state: { 
+                    email: formData.email,
+                    message: 'Registration successful! Please check your email for the OTP.' 
+                } 
+            });
         } else {
             setError(result.error);
         }
@@ -188,8 +193,7 @@ const Register = () => {
 
                             <div className="alert alert-info mt-4" role="alert">
                                 <i className="bi bi-info-circle me-2"></i>
-                                <strong>Note:</strong> Email verification is required after registration.
-                                Check your email for the verification link.
+                                <strong>Note:</strong> You'll receive an OTP via email after registration for verification.
                             </div>
                         </div>
                     </div>

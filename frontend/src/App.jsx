@@ -9,6 +9,7 @@ import Home from './pages/public/Home';
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
 import VerifyEmail from './pages/public/VerifyEmail';
+import VerifyOTP from './pages/public/VerifyOTP';
 import BhaktnivasListing from './pages/public/BhaktnivasListing';
 import BhaktnivasDetails from './pages/public/BhaktnivasDetails';
 import DarshanBooking from './pages/public/DarshanBooking';
@@ -76,6 +77,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/verify-email" element={<VerifyEmail />} />
+                    <Route path="/verify-otp" element={<VerifyOTP />} />
                     <Route path="/bhaktnivas" element={<BhaktnivasListing />} />
                     <Route path="/bhaktnivas/:id" element={<BhaktnivasDetails />} />
                     <Route path="/darshan" element={<DarshanBooking />} />
