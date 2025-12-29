@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { bhaktnivasService } from '../../services/bhaktnivasService';
 import { foodService } from '../../services/darshanService'; // foodService is exported from here
 import { templeService } from '../../services/templeService';
+import BhaktnivasImageUpload from '../../components/common/BhaktnivasImageUpload';
 
 const MyListings = () => {
     const navigate = useNavigate();
@@ -25,7 +26,8 @@ const MyListings = () => {
         capacity: '',
         amenities: '',
         contactPhone: '',
-        isAvailable: true
+        isAvailable: true,
+        imageUrl: ''
     });
 
     // Food service form data
@@ -62,6 +64,10 @@ const MyListings = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleImageUpload = (imagePath) => {
+        setBhaktnivasForm({ ...bhaktnivasForm, imageUrl: imagePath || '' });
     };
 
     const handleAddBhaktnivas = async (e) => {
@@ -122,7 +128,8 @@ const MyListings = () => {
                 capacity: item.capacity.toString(),
                 amenities: item.amenities || '',
                 contactPhone: item.contactPhone || '',
-                isAvailable: item.isAvailable
+                isAvailable: item.isAvailable,
+                imageUrl: item.imageUrl || ''
             });
         }
         setShowAddModal(true);
@@ -154,7 +161,8 @@ const MyListings = () => {
             capacity: '',
             amenities: '',
             contactPhone: '',
-            isAvailable: true
+            isAvailable: true,
+            imageUrl: ''
         });
         setEditingItem(null);
     };
@@ -174,7 +182,7 @@ const MyListings = () => {
 
     return (
         <div className="container py-5">
-            <ToastContainer />
+            <ToastContainer position="top-right" style={{ zIndex: 9999, top: '80px' }} />
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>
                     <i className="bi bi-building me-3"></i>
@@ -342,6 +350,10 @@ const MyListings = () => {
                                                 ))}
                                             </select>
                                         </div>
+                                        <BhaktnivasImageUpload 
+                                            onImageUpload={handleImageUpload}
+                                            initialImage={bhaktnivasForm.imageUrl}
+                                        />
                                         <div className="row">
                                             <div className="col-md-6 mb-3">
                                                 <label className="form-label">Price Per Night (₹) *</label>

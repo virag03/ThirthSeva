@@ -178,8 +178,8 @@ const BhaktnivasDetails = () => {
                                 borderRadius: '8px',
                                 overflow: 'hidden'
                             }}>
-                                {bhaktnivas.imageUrl ? (
-                                    <img src={bhaktnivas.imageUrl} alt={bhaktnivas.name}
+                                {bhaktnivas.imageUrl && (bhaktnivas.imageUrl.startsWith('/uploads/')) ? (
+                                    <img src={`https://localhost:7001${bhaktnivas.imageUrl}`} alt={bhaktnivas.name}
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 ) : (
                                     <i className="bi bi-building" style={{ fontSize: '5rem', color: '#999' }}></i>

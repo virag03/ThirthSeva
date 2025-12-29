@@ -39,6 +39,12 @@ namespace TirthSeva.API.Models
         [StringLength(500)]
         public string ImageUrl { get; set; } = string.Empty;
 
+        [StringLength(500)]
+        public string Amenities { get; set; } = string.Empty;
+
+        [StringLength(20)]
+        public string ContactPhone { get; set; } = string.Empty;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties

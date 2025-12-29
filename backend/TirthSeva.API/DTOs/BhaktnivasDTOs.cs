@@ -47,6 +47,10 @@ namespace TirthSeva.API.DTOs
         public string DistanceFromTemple { get; set; } = string.Empty;
 
         public string ImageUrl { get; set; } = string.Empty;
+
+        public string Amenities { get; set; } = string.Empty;
+
+        public string ContactPhone { get; set; } = string.Empty;
     }
 
     public class UpdateBhaktnivasRequest : CreateBhaktnivasRequest

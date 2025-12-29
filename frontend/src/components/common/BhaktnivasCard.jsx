@@ -5,7 +5,10 @@ const BhaktnivasCard = ({ bhaktnivas }) => {
         <div className="card">
             <div className="position-relative">
                 <img
-                    src={bhaktnivas.imageUrl || '/images/bhaktnivas-placeholder.jpg'}
+                    src={bhaktnivas.imageUrl && (bhaktnivas.imageUrl.startsWith('/uploads/')) ? 
+                        `https://localhost:7001${bhaktnivas.imageUrl}` : 
+                        'https://via.placeholder.com/300x180?text=No+Image'
+                    }
                     alt={bhaktnivas.name}
                     className="card-img-top"
                     style={{ height: '180px', objectFit: 'cover', borderRadius: '1rem 1rem 0 0' }}

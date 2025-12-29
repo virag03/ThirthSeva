@@ -11,7 +11,6 @@ namespace TirthSeva.API.Controllers
     public class BhaktnivasController : ControllerBase
     {
         private readonly BhaktnivasService _bhaktnivasService;
-
         public BhaktnivasController(BhaktnivasService bhaktnivasService)
         {
             _bhaktnivasService = bhaktnivasService;

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TirthSeva.API.Data;
@@ -82,6 +83,8 @@ using (var scope = app.Services.CreateScope())
         // Ensure database is created with latest schema
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
+        // Apply migrations
+        context.Database.Migrate();
         
         // Seed data
         DbSeeder.SeedData(context);
@@ -103,18 +106,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Enable static file serving for uploaded images
-app.UseStaticFiles();
+// Ensure uploads directories exist
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+var templesPath = Path.Combine(uploadsPath, "temples");
+var bhaktnivasPath = Path.Combine(uploadsPath, "bhaktnivas");
 
-// Ensure uploads directory exists
-var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "temples");
-if (!Directory.Exists(uploadsPath))
+if (!Directory.Exists(templesPath))
 {
-    Directory.CreateDirectory(uploadsPath);
-    Console.WriteLine($"Created uploads directory: {uploadsPath}");
+    Directory.CreateDirectory(templesPath);
+}
+if (!Directory.Exists(bhaktnivasPath))
+{
+    Directory.CreateDirectory(bhaktnivasPath);
 }
 
 app.UseCors("AllowFrontend");
+
+// Enable static file serving for uploaded images
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

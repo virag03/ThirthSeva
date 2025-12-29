@@ -219,8 +219,30 @@ const BhaktnivasListing = () => {
                                 <div style={{
                                     height: '200px',
                                     backgroundColor: '#E5E5E5',
-                                    position: 'relative'
+                                    position: 'relative',
+                                    overflow: 'hidden'
                                 }}>
+                                    {item.imageUrl && item.imageUrl.startsWith('/uploads/') ? (
+                                        <img 
+                                            src={`https://localhost:7001${item.imageUrl}`}
+                                            alt={item.name}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                        />
+                                    ) : (
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '100%',
+                                            color: '#999'
+                                        }}>
+                                            <i className="bi bi-building" style={{ fontSize: '3rem' }}></i>
+                                        </div>
+                                    )}
                                     {/* Rating Badge */}
                                     <div style={{
                                         position: 'absolute',

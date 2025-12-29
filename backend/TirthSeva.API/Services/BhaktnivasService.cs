@@ -124,6 +124,8 @@ namespace TirthSeva.API.Services
                 Capacity = request.Capacity,
                 DistanceFromTemple = request.DistanceFromTemple,
                 ImageUrl = request.ImageUrl,
+                Amenities = request.Amenities,
+                ContactPhone = request.ContactPhone,
                 IsAvailable = true,
                 CreatedAt = DateTime.UtcNow
             };
@@ -155,6 +157,8 @@ namespace TirthSeva.API.Services
             bhaktnivas.Capacity = request.Capacity;
             bhaktnivas.DistanceFromTemple = request.DistanceFromTemple;
             bhaktnivas.ImageUrl = request.ImageUrl;
+            bhaktnivas.Amenities = request.Amenities;
+            bhaktnivas.ContactPhone = request.ContactPhone;
             bhaktnivas.IsAvailable = request.IsAvailable;
 
             await _context.SaveChangesAsync();

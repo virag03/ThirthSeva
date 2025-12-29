@@ -18,7 +18,7 @@ namespace TirthSeva.API.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<ActionResult<string>> UploadImage([FromForm] IFormFile image)
+        public async Task<ActionResult<string>> UploadImage([FromForm] IFormFile image, [FromQuery] string type = "temple")
         {
             if (image == null || image.Length == 0)
             {
@@ -42,7 +42,8 @@ namespace TirthSeva.API.Controllers
             {
                 // Generate unique filename
                 var fileName = $"{Guid.NewGuid()}{extension}";
-                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "temples");
+                var folder = type == "bhaktnivas" ? "bhaktnivas" : "temples";
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", folder);
                 
                 // Ensure directory exists
                 if (!Directory.Exists(uploadsFolder))
@@ -59,7 +60,7 @@ namespace TirthSeva.API.Controllers
                 }
 
                 // Return relative path that can be used in URLs
-                var relativePath = $"/uploads/temples/{fileName}";
+                var relativePath = $"/uploads/{folder}/{fileName}";
                 return Ok(new { imagePath = relativePath });
             }
             catch (Exception ex)
