@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using TirthSeva.API.Data;
 using TirthSeva.API.DTOs;
+using TirthSeva.API.Helpers;
 using TirthSeva.API.Services;
 
 namespace TirthSeva.API.Controllers
@@ -11,10 +14,12 @@ namespace TirthSeva.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
+        private readonly ApplicationDbContext _context;
 
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService, ApplicationDbContext context)
         {
             _authService = authService;
+            _context = context;
         }
 
         [HttpPost("register")]
@@ -24,7 +29,7 @@ namespace TirthSeva.API.Controllers
 
             if (result == null)
             {
-                return BadRequest(new { message = "Email already exists or invalid role" });
+                return BadRequest(new { message = "Email already exists or registration failed" });
             }
 
             return Ok(result);
@@ -43,17 +48,75 @@ namespace TirthSeva.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("verify-email")]
-        public async Task<ActionResult> VerifyEmail([FromBody] VerifyEmailRequest request)
+        [HttpPost("verify-otp")]
+        public async Task<ActionResult> VerifyOTP([FromBody] VerifyOTPRequest request)
         {
-            var result = await _authService.VerifyEmailAsync(request.Token);
+            var result = await _authService.VerifyOTPAsync(request.Email, request.OTP);
 
             if (!result)
             {
-                return BadRequest(new { message = "Invalid verification token" });
+                return BadRequest(new { message = "Invalid or expired OTP" });
             }
 
             return Ok(new { message = "Email verified successfully" });
+        }
+
+        [HttpPost("resend-otp")]
+        public async Task<ActionResult> ResendOTP([FromBody] ResendOTPRequest request)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                
+                if (user == null || user.IsEmailVerified)
+                {
+                    return BadRequest(new { message = "User not found or already verified" });
+                }
+
+                // Generate new OTP
+                var otp = new Random().Next(100000, 999999).ToString();
+                user.EmailOTP = otp;
+                user.OTPExpiry = DateTime.UtcNow.AddMinutes(10);
+                
+                await _context.SaveChangesAsync();
+
+                // Send OTP email
+                var emailHelper = HttpContext.RequestServices.GetRequiredService<EmailHelper>();
+                await emailHelper.SendOTPEmailAsync(user.Email, user.Name, otp);
+
+                return Ok(new { message = "OTP sent successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to resend OTP", error = ex.Message });
+            }
+        }
+
+        [HttpGet("test-otp/{email}")]
+        public async Task<ActionResult> TestOTP(string email)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found" });
+                }
+
+                return Ok(new {
+                    email = user.Email,
+                    name = user.Name,
+                    isVerified = user.IsEmailVerified,
+                    currentOTP = user.EmailOTP,
+                    otpExpiry = user.OTPExpiry,
+                    isOTPValid = user.OTPExpiry > DateTime.UtcNow
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [Authorize]

@@ -79,7 +79,8 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
         
-        // Create database if it doesn't exist
+        // Ensure database is created with latest schema
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
         
         // Seed data
