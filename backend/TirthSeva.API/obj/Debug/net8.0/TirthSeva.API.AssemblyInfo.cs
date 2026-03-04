@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TirthSeva.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3154faaf56868a600455e6edd138fd6d34f52ba")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc5716ef99e26655876274260cd46ea997bbe7d3")]
 [assembly: System.Reflection.AssemblyProductAttribute("TirthSeva.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TirthSeva.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
