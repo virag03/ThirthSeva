@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen();
    //for-mssql-server-DB options.UseSqlServer(connectionString));
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));

@@ -859,3 +859,4 @@ C:\Users\virag\Desktop\AMEYDROP\working_tirthseva\backend\TirthSeva.API\obj\Debu
 C:\Users\virag\Desktop\AMEYDROP\working_tirthseva\backend\TirthSeva.API\obj\Debug\net8.0\TirthSeva.API.pdb
 C:\Users\virag\Desktop\AMEYDROP\working_tirthseva\backend\TirthSeva.API\obj\Debug\net8.0\TirthSeva.API.genruntimeconfig.cache
 C:\Users\virag\Desktop\AMEYDROP\working_tirthseva\backend\TirthSeva.API\obj\Debug\net8.0\ref\TirthSeva.API.dll
+C:\Users\virag\Desktop\AMEYDROP\working_tirthseva\backend\TirthSeva.API\obj\Debug\net8.0\TirthSeva.API.sourcelink.json
