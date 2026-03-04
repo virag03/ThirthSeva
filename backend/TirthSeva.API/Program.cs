@@ -12,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Listen on PORT when set (e.g. Render, Heroku)
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseUrls("http://0.0.0.0:" + 
-    Environment.GetEnvironmentVariable("PORT") ?? "5000");
+
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -21,9 +20,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure SQL Server Database
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+   //for-mssql-server-DB options.UseSqlServer(connectionString));
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
