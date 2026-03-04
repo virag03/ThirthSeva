@@ -10,7 +10,7 @@ using TirthSeva.API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Listen on PORT when set (e.g. Render, Heroku)
-var builder = WebApplication.CreateBuilder(args);
+//var builder = WebApplication.CreateBuilder(args);
 
 
 
@@ -91,7 +91,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<ApplicationDbContext>();
+        var context = services.GetRequiredService<AppDbContext>();
+        //mssql-vala  var context = services.GetRequiredService<ApplicationDbContext>();
         
         // Only use Migrate() - Remove EnsureDeleted() and EnsureCreated()
         // Migrate will apply any pending migrations and create database if it doesn't exist
@@ -146,8 +147,8 @@ app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    
+    //mssqlvalavar context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     // Check if admin exists
     var admin = context.Users.FirstOrDefault(u => u.Email == "admin@tirthseva.com" && u.Role == "Admin");
     if (admin == null)
